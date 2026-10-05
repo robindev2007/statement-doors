@@ -1,7 +1,7 @@
-import { defineConfig, globalIgnores } from "eslint/config";
+import { plugin as shadcn } from "@shadcn/lint";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
-import { plugin as shadcn } from "@shadcn/lint";
+import { defineConfig, globalIgnores } from "eslint/config";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -19,6 +19,20 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    files: ["src/app/**/page.tsx", "src/app/**/layout.tsx"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "Program > ExpressionStatement > Literal[value='use client']",
+          message:
+            "Please use the 'use client' directive in a separate file and import it instead of using it directly in the page or layout file.",
+        },
+      ],
+    },
+  },
 ]);
 
 export default eslintConfig;
