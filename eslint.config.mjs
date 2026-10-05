@@ -10,6 +10,11 @@ const eslintConfig = defineConfig([
     plugins: {
       shadcn,
     },
+    rules: {
+      "shadcn/no-raw-colors": "error",
+      "shadcn/no-arbitrary-values": "error",
+      "shadcn/no-unknown-classes": "error",
+    },
   },
   // Override default ignores of eslint-config-next.
   globalIgnores([
