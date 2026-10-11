@@ -303,13 +303,13 @@ export function Footer({ className, ...props }: FooterProps) {
                   type="email"
                   placeholder="Your email address"
                   required
-                  className="h-9 border-transparent text-sm text-[#13171C] placeholder:text-[#676567] dark:bg-white"
+                  className="h-9 w-fit border-transparent text-sm text-[#13171C] placeholder:text-[#676567] dark:bg-white"
                 />
                 <Button
                   type="submit"
                   variant="theme"
                   size="lg"
-                  className="w-full text-xs font-semibold tracking-wider uppercase"
+                  className="w-fit text-xs font-semibold tracking-wider uppercase"
                 >
                   SUBSCRIBE
                 </Button>

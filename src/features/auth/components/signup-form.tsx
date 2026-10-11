@@ -37,8 +37,8 @@ export function SignUpForm() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      email: "hijuyed@gmail.com",
-      phoneNumber: "1546965899549",
+      email: "",
+      phoneNumber: "",
       password: "",
       confirmPassword: "",
       agreeToTerms: false,
@@ -50,7 +50,7 @@ export function SignUpForm() {
   };
 
   return (
-    <Card className="w-full max-w-115 border-0 bg-transparent shadow-none">
+    <Card className="border-border/50 w-full max-w-135 border shadow-xs">
       {/* Header */}
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold tracking-tight sm:text-3xl">
