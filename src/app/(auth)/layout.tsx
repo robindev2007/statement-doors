@@ -14,7 +14,7 @@ export default function AuthLayout({
       <main className="flex flex-1 items-center justify-center py-12 sm:py-16">
         {children}
       </main>
-      <Footer />
+      <Footer showCta={false} />
     </div>
   );
 }

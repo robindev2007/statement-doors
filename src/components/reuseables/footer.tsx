@@ -46,70 +46,73 @@ const TRUST_FEATURES = [
 
 interface FooterProps extends React.ComponentProps<"footer"> {
   className?: string;
+  showCta?: boolean;
 }
 
-export function Footer({ className, ...props }: FooterProps) {
+export function Footer({ className, showCta = true, ...props }: FooterProps) {
   return (
     <footer className={cn("w-full", className)} {...props}>
       {/* Top CTA Banner Section with Background Image */}
-      <div className="relative w-full overflow-hidden py-16 text-white sm:py-20 lg:py-24">
-        {/* Background Image */}
-        <Image
-          src="/images/footer/cta-bg.png"
-          alt="Statement Doors Architectural Background"
-          fill
-          priority={false}
-          className="object-cover object-center"
-        />
-        {/* Dark overlay for contrast */}
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
+      {showCta && (
+        <div className="relative w-full overflow-hidden py-16 text-white sm:py-20 lg:py-24">
+          {/* Background Image */}
+          <Image
+            src="/images/footer/cta-bg.png"
+            alt="Statement Doors Architectural Background"
+            fill
+            priority={false}
+            className="object-cover object-center"
+          />
+          {/* Dark overlay for contrast */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]" />
 
-        <Container className="relative z-10 flex flex-col justify-between gap-10 lg:flex-row lg:items-center">
-          {/* Left Column: Heading, Subheading & Action Buttons */}
-          <div className="max-w-xl text-left">
-            <H2 className="font-serif text-3xl font-medium tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Ready to Make a Statement?
-            </H2>
-            <P className="mt-3 text-sm leading-relaxed text-white/90 sm:text-base">
-              Design your perfect front door today or browse our collection.
-            </P>
+          <Container className="relative z-10 flex flex-col justify-between gap-10 lg:flex-row lg:items-center">
+            {/* Left Column: Heading, Subheading & Action Buttons */}
+            <div className="max-w-xl text-left">
+              <H2 className="font-serif text-3xl font-medium tracking-tight text-white sm:text-4xl lg:text-5xl">
+                Ready to Make a Statement?
+              </H2>
+              <P className="mt-3 text-sm leading-relaxed text-white/90 sm:text-base">
+                Design your perfect front door today or browse our collection.
+              </P>
 
-            {/* Action Buttons */}
-            <div className="mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
-              <Button
-                variant="theme"
-                size="lg"
-                className="group flex items-center gap-2 rounded-lg text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:gap-3 sm:text-sm"
-                render={
-                  <Link href="/design-your-door">
-                    Design Your Door
-                    <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-                  </Link>
-                }
-              />
-              <Button
-                variant="outline"
-                size="lg"
-                className="rounded-lg border-white/30 bg-transparent text-xs font-semibold tracking-wider text-white uppercase hover:border-white/60 hover:bg-white/10 hover:text-white sm:text-sm"
-                render={<Link href="/all-doors">Browse All Doors</Link>}
-              />
-            </div>
-          </div>
-
-          {/* Right Column: Trust Features with primary tick mark icons (no bg) */}
-          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-1 lg:gap-4">
-            {TRUST_FEATURES.map((feature) => (
-              <div
-                key={feature}
-                className="flex items-center gap-3 text-sm font-medium text-white sm:text-base"
-              >
-                <Check className="text-primary size-5 shrink-0 stroke-[2.5]" />
-                <span>{feature}</span>
+              {/* Action Buttons */}
+              <div className="mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4">
+                <Button
+                  variant="theme"
+                  size="lg"
+                  className="group flex items-center gap-2 rounded-lg text-xs font-semibold tracking-wider uppercase transition-all duration-300 hover:gap-3 sm:text-sm"
+                  render={
+                    <Link href="/design-your-door">
+                      Design Your Door
+                      <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </Link>
+                  }
+                />
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="rounded-lg border-white/30 bg-transparent text-xs font-semibold tracking-wider text-white uppercase hover:border-white/60 hover:bg-white/10 hover:text-white sm:text-sm"
+                  render={<Link href="/all-doors">Browse All Doors</Link>}
+                />
               </div>
-            ))}
-          </div>
-        </Container>
-      </div>
+            </div>
+
+            {/* Right Column: Trust Features with primary tick mark icons (no bg) */}
+            <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-1 lg:gap-4">
+              {TRUST_FEATURES.map((feature) => (
+                <div
+                  key={feature}
+                  className="flex items-center gap-3 text-sm font-medium text-white sm:text-base"
+                >
+                  <Check className="text-primary size-5 shrink-0 stroke-[2.5]" />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          </Container>
+        </div>
+      )}
 
       {/* Main Footer Links & Newsletter - Dark Theme */}
       <div className="dark text-foreground w-full border-white/10 bg-[#0B0D0F] pt-16 pb-12 sm:pt-20">
