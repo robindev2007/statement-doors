@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 
-import { H1 } from "@/components/ui/typography";
+import { SignUpForm } from "@/features/auth";
 
 export const metadata: Metadata = {
-  title: "Sign Up | Statement Doors",
+  title: "Create Account | Statement Doors",
+  description:
+    "Lets get started with a few basic details to create your account",
 };
 
 export default function SignUpPage() {
-  return <H1>Sign Up</H1>;
+  return <SignUpForm />;
 }
