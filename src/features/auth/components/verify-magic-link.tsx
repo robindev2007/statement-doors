@@ -65,7 +65,7 @@ export function VerifyMagicLink() {
   }, [token, router]);
 
   return (
-    <Card className="w-full max-w-115 border-0 bg-transparent shadow-none">
+    <Card className="flex min-h-[60vh] w-full max-w-115 flex-col justify-center border-0 bg-transparent shadow-none">
       <CardHeader className="text-center">
         {status === "loading" && (
           <div className="bg-muted/60 mx-auto mb-4 flex size-14 items-center justify-center rounded-full">

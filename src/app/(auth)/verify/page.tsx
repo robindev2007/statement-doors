@@ -13,7 +13,7 @@ export default function VerifyPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex flex-col items-center justify-center py-12 text-center">
+        <div className="flex min-h-[60vh] w-full max-w-115 flex-col items-center justify-center py-12 text-center">
           <div className="bg-muted/60 mb-4 flex size-14 items-center justify-center rounded-full">
             <Loader2 className="text-foreground size-7 animate-spin" />
           </div>
