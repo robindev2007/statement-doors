@@ -5,7 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -48,7 +48,7 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-115 shadow-sm">
+    <Card className="w-full max-w-115 border-0 shadow-none shadow-xs">
       {/* Header */}
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold tracking-tight sm:text-3xl">
