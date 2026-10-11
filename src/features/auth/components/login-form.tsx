@@ -62,18 +62,16 @@ export function LoginForm() {
           <div>
             <label
               htmlFor="email"
-              className="text-foreground flex items-center gap-1 text-sm font-medium"
+              className="text-foreground text-sm font-medium"
             >
-              <span>Email</span>
-              <span className="text-destructive">*</span>
-              <span className="text-muted-foreground text-xs">(optional)</span>
+              Email
             </label>
-            <div className="mt-1.5">
+            <div className="mt-1">
               <Input
                 id="email"
                 type="email"
                 placeholder="hijuyed@gmail.com"
-                className="h-11 px-3.5"
+                className="h-9.5 px-3"
                 {...register("email")}
               />
             </div>
@@ -88,18 +86,16 @@ export function LoginForm() {
           <div>
             <label
               htmlFor="password"
-              className="text-foreground flex items-center gap-1 text-sm font-medium"
+              className="text-foreground text-sm font-medium"
             >
-              <span>Password</span>
-              <span className="text-destructive">*</span>
-              <span className="text-muted-foreground text-xs">(optional)</span>
+              Password
             </label>
-            <div className="relative mt-1.5">
+            <div className="relative mt-1">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                className="h-11 pr-10 pl-3.5"
+                className="h-9.5 pr-10 pl-3"
                 {...register("password")}
               />
               <button
@@ -120,10 +116,18 @@ export function LoginForm() {
                 {errors.password.message}
               </p>
             )}
+            <div className="mt-1.5 flex justify-end">
+              <Link
+                href="/forgot-password"
+                className="text-muted-foreground hover:text-foreground text-xs transition-colors hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
-          {/* Remember me & Forgot Password */}
-          <div className="flex items-center justify-between pt-1">
+          {/* Remember me */}
+          <div className="flex items-center pt-0.5">
             <label className="flex cursor-pointer items-center gap-2 select-none">
               <input
                 type="checkbox"
@@ -132,30 +136,20 @@ export function LoginForm() {
               />
               <span className="text-foreground text-sm">Remember me</span>
             </label>
-            <div className="flex items-center gap-1 text-sm">
-              <Link
-                href="/forgot-password"
-                className="text-foreground hover:underline"
-              >
-                Forgot Password?
-              </Link>
-              <span className="text-destructive">*</span>
-              <span className="text-muted-foreground text-xs">(optional)</span>
-            </div>
           </div>
 
           {/* Submit Button - Black bg and white text */}
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="mt-2 h-11 w-full bg-black text-base font-semibold text-white hover:bg-black/90 active:bg-black/80"
+            className="mt-2 h-10 w-full bg-black text-sm font-semibold text-white hover:bg-black/90 active:bg-black/80"
           >
             {isSubmitting ? "Signing in..." : "Sign in"}
           </Button>
         </form>
 
         {/* Divider */}
-        <div className="relative my-6">
+        <div className="relative my-5">
           <div className="absolute inset-0 flex items-center">
             <div className="border-border w-full border-t" />
           </div>
@@ -164,12 +158,12 @@ export function LoginForm() {
           </div>
         </div>
 
-        {/* Social Logins with real SVG icons from public/icons */}
-        <div className="space-y-3">
+        {/* Social Logins with real SVG icons */}
+        <div className="space-y-2.5">
           <Button
             type="button"
             variant="outline"
-            className="border-border hover:bg-muted h-11 w-full gap-2.5 font-medium"
+            className="border-border hover:bg-muted h-10 w-full gap-2.5 font-medium"
           >
             <Image
               src="/icons/google.svg"
@@ -183,7 +177,7 @@ export function LoginForm() {
           <Button
             type="button"
             variant="outline"
-            className="border-border hover:bg-muted h-11 w-full gap-2.5 font-medium"
+            className="border-border hover:bg-muted h-10 w-full gap-2.5 font-medium"
           >
             <Image
               src="/icons/apple.svg"
@@ -198,7 +192,7 @@ export function LoginForm() {
       </CardContent>
 
       {/* Sign up footer */}
-      <CardFooter className="justify-center pt-2">
+      <CardFooter className="justify-center pt-1">
         <p className="text-muted-foreground text-sm">
           <span>Don’t have a account? </span>
           <Link
