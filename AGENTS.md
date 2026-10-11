@@ -8,6 +8,7 @@
 - Do not add dependencies unless necessary.
 - Do not modify unrelated files.
 - Do not use `any` unless absolutely necessary.
+- Never use divider/banner block comments (e.g. `/* -------------------- */`). Use simple comments (e.g. `// Desktop Navigation`).
 
 ## Frontend
 

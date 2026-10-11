@@ -12,7 +12,6 @@ const eslintConfig = defineConfig([
     },
     rules: {
       "shadcn/no-raw-colors": "error",
-      "shadcn/no-arbitrary-values": "error",
       "shadcn/no-unknown-classes": "error",
     },
   },
