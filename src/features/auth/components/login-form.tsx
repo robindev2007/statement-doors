@@ -1,11 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Eye, EyeOff } from "lucide-react";
+import { useForm, Controller } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +16,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import {
   type LoginFormData,
   loginSchema,
@@ -27,12 +30,13 @@ export function LoginForm() {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "hijuyed@gmail.com",
+      email: "",
       password: "",
       rememberMe: false,
     },
@@ -44,7 +48,7 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-[440px] shadow-sm">
+    <Card className="w-full max-w-115 shadow-sm">
       {/* Header */}
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold tracking-tight sm:text-3xl">
@@ -60,13 +64,10 @@ export function LoginForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Email Field */}
           <div>
-            <label
-              htmlFor="email"
-              className="text-foreground text-sm font-medium"
-            >
+            <Label htmlFor="email" className="text-foreground">
               Email
-            </label>
-            <div className="mt-1">
+            </Label>
+            <div className="mt-1.5">
               <Input
                 id="email"
                 type="email"
@@ -84,13 +85,10 @@ export function LoginForm() {
 
           {/* Password Field */}
           <div>
-            <label
-              htmlFor="password"
-              className="text-foreground text-sm font-medium"
-            >
+            <Label htmlFor="password" className="text-foreground">
               Password
-            </label>
-            <div className="relative mt-1">
+            </Label>
+            <div className="relative mt-1.5">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -101,7 +99,7 @@ export function LoginForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center pr-3"
+                className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center pr-3 transition-colors"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? (
@@ -119,23 +117,32 @@ export function LoginForm() {
             <div className="mt-1.5 flex justify-end">
               <Link
                 href="/forgot-password"
-                className="text-muted-foreground hover:text-foreground text-xs transition-colors hover:underline"
+                className="text-brand-link text-xs font-medium transition-opacity hover:underline hover:opacity-85"
               >
                 Forgot Password?
               </Link>
             </div>
           </div>
 
-          {/* Remember me */}
-          <div className="flex items-center pt-0.5">
-            <label className="flex cursor-pointer items-center gap-2 select-none">
-              <input
-                type="checkbox"
-                className="border-input size-4 rounded accent-black"
-                {...register("rememberMe")}
-              />
-              <span className="text-foreground text-sm">Remember me</span>
-            </label>
+          {/* Remember me with shadcn Checkbox & Label */}
+          <div className="flex items-center gap-2 pt-0.5">
+            <Controller
+              name="rememberMe"
+              control={control}
+              render={({ field }) => (
+                <Checkbox
+                  id="rememberMe"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
+            <Label
+              htmlFor="rememberMe"
+              className="text-foreground cursor-pointer text-sm font-normal"
+            >
+              Remember me
+            </Label>
           </div>
 
           {/* Submit Button - Black bg and white text */}
@@ -148,22 +155,22 @@ export function LoginForm() {
           </Button>
         </form>
 
-        {/* Divider */}
+        {/* Divider with Separator */}
         <div className="relative my-5">
           <div className="absolute inset-0 flex items-center">
-            <div className="border-border w-full border-t" />
+            <Separator />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-card text-muted-foreground px-3">or</span>
           </div>
         </div>
 
-        {/* Social Logins with real SVG icons */}
+        {/* Social Logins - Transparent background */}
         <div className="space-y-2.5">
           <Button
             type="button"
             variant="outline"
-            className="border-border hover:bg-muted h-10 w-full gap-2.5 font-medium"
+            className="border-border hover:bg-muted h-10 w-full gap-2.5 bg-transparent font-medium"
           >
             <Image
               src="/icons/google.svg"
@@ -177,7 +184,7 @@ export function LoginForm() {
           <Button
             type="button"
             variant="outline"
-            className="border-border hover:bg-muted h-10 w-full gap-2.5 font-medium"
+            className="border-border hover:bg-muted h-10 w-full gap-2.5 bg-transparent font-medium"
           >
             <Image
               src="/icons/apple.svg"
@@ -197,7 +204,7 @@ export function LoginForm() {
           <span>Don’t have a account? </span>
           <Link
             href="/signup"
-            className="text-foreground font-medium hover:underline"
+            className="text-brand-link font-semibold transition-opacity hover:underline hover:opacity-85"
           >
             Sign up
           </Link>
