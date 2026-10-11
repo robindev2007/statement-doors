@@ -1,0 +1,191 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { FaApple, FaGoogle } from "react-icons/fa";
+import { Eye, EyeOff } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { H1, P } from "@/components/ui/typography";
+import {
+  type LoginFormData,
+  loginSchema,
+} from "@/features/auth/schemas/login.schema";
+
+export function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "hijuyed@gmail.com",
+      password: "",
+      rememberMe: false,
+    },
+  });
+
+  const onSubmit = (data: LoginFormData) => {
+    // Submit handler placeholder
+    console.log("Sign in form data:", data);
+  };
+
+  return (
+    <div className="w-full max-w-[440px] px-4 py-8 sm:px-6">
+      {/* Header */}
+      <div className="text-center">
+        <H1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Welcome back
+        </H1>
+        <P className="text-muted-foreground mt-2 text-sm">
+          Sign in to Continue to your Statement door account
+        </P>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
+        {/* Email Field */}
+        <div>
+          <label
+            htmlFor="email"
+            className="text-foreground flex items-center gap-1 text-sm font-medium"
+          >
+            <span>Email</span>
+            <span className="text-destructive">*</span>
+            <span className="text-muted-foreground text-xs">(optional)</span>
+          </label>
+          <div className="mt-1.5">
+            <Input
+              id="email"
+              type="email"
+              placeholder="hijuyed@gmail.com"
+              className="h-11 px-3.5"
+              {...register("email")}
+            />
+          </div>
+          {errors.email && (
+            <p className="text-destructive mt-1 text-xs">
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        {/* Password Field */}
+        <div>
+          <label
+            htmlFor="password"
+            className="text-foreground flex items-center gap-1 text-sm font-medium"
+          >
+            <span>Password</span>
+            <span className="text-destructive">*</span>
+            <span className="text-muted-foreground text-xs">(optional)</span>
+          </label>
+          <div className="relative mt-1.5">
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              className="h-11 pr-10 pl-3.5"
+              {...register("password")}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-0 flex items-center pr-3"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff className="size-4" />
+              ) : (
+                <Eye className="size-4" />
+              )}
+            </button>
+          </div>
+          {errors.password && (
+            <p className="text-destructive mt-1 text-xs">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        {/* Remember me & Forgot Password */}
+        <div className="flex items-center justify-between pt-1">
+          <label className="flex cursor-pointer items-center gap-2 select-none">
+            <input
+              type="checkbox"
+              className="border-input accent-primary size-4 rounded"
+              {...register("rememberMe")}
+            />
+            <span className="text-foreground text-sm">Remember me</span>
+          </label>
+          <div className="flex items-center gap-1 text-sm">
+            <Link
+              href="/forgot-password"
+              className="text-primary hover:underline"
+            >
+              Forgot Password?
+            </Link>
+            <span className="text-destructive">*</span>
+            <span className="text-muted-foreground text-xs">(optional)</span>
+          </div>
+        </div>
+
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2 h-11 w-full text-base font-semibold"
+        >
+          {isSubmitting ? "Signing in..." : "Sign in"}
+        </Button>
+      </form>
+
+      {/* Divider */}
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <div className="border-border w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background text-muted-foreground px-3">or</span>
+        </div>
+      </div>
+
+      {/* Social Logins */}
+      <div className="space-y-3">
+        <Button
+          type="button"
+          variant="outline"
+          className="border-border hover:bg-muted h-11 w-full gap-2 font-medium"
+        >
+          <FaGoogle className="text-foreground size-4" />
+          <span>Sign in with Google</span>
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="border-border hover:bg-muted h-11 w-full gap-2 font-medium"
+        >
+          <FaApple className="text-foreground size-4" />
+          <span>Continue with Apple</span>
+        </Button>
+      </div>
+
+      {/* Sign up prompt */}
+      <div className="text-muted-foreground mt-8 text-center text-sm">
+        <span>Don’t have a account? </span>
+        <Link
+          href="/signup"
+          className="text-primary font-medium hover:underline"
+        >
+          Sign up
+        </Link>
+      </div>
+    </div>
+  );
+}

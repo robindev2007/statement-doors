@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
-import { H1 } from "@/components/ui/typography";
+import { LoginForm } from "@/features/auth";
 
 export const metadata: Metadata = {
-  title: "Login | Statement Doors",
+  title: "Sign in | Statement Doors",
+  description: "Sign in to Continue to your Statement door account",
 };
 
 export default function LoginPage() {
-  return <H1>Login</H1>;
+  return <LoginForm />;
 }
