@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaApple, FaGoogle } from "react-icons/fa";
 import { Eye, EyeOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -127,7 +127,7 @@ export function LoginForm() {
             <label className="flex cursor-pointer items-center gap-2 select-none">
               <input
                 type="checkbox"
-                className="border-input accent-primary size-4 rounded"
+                className="border-input size-4 rounded accent-black"
                 {...register("rememberMe")}
               />
               <span className="text-foreground text-sm">Remember me</span>
@@ -135,7 +135,7 @@ export function LoginForm() {
             <div className="flex items-center gap-1 text-sm">
               <Link
                 href="/forgot-password"
-                className="text-primary hover:underline"
+                className="text-foreground hover:underline"
               >
                 Forgot Password?
               </Link>
@@ -144,11 +144,11 @@ export function LoginForm() {
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit Button - Black bg and white text */}
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2 h-11 w-full text-base font-semibold"
+            className="mt-2 h-11 w-full bg-black text-base font-semibold text-white hover:bg-black/90 active:bg-black/80"
           >
             {isSubmitting ? "Signing in..." : "Sign in"}
           </Button>
@@ -164,22 +164,34 @@ export function LoginForm() {
           </div>
         </div>
 
-        {/* Social Logins */}
+        {/* Social Logins with real SVG icons from public/icons */}
         <div className="space-y-3">
           <Button
             type="button"
             variant="outline"
-            className="border-border hover:bg-muted h-11 w-full gap-2 font-medium"
+            className="border-border hover:bg-muted h-11 w-full gap-2.5 font-medium"
           >
-            <FaGoogle className="text-foreground size-4" />
+            <Image
+              src="/icons/google.svg"
+              alt="Google"
+              width={18}
+              height={18}
+              className="size-[18px]"
+            />
             <span>Sign in with Google</span>
           </Button>
           <Button
             type="button"
             variant="outline"
-            className="border-border hover:bg-muted h-11 w-full gap-2 font-medium"
+            className="border-border hover:bg-muted h-11 w-full gap-2.5 font-medium"
           >
-            <FaApple className="text-foreground size-4" />
+            <Image
+              src="/icons/apple.svg"
+              alt="Apple"
+              width={18}
+              height={18}
+              className="size-[18px]"
+            />
             <span>Continue with Apple</span>
           </Button>
         </div>
@@ -191,7 +203,7 @@ export function LoginForm() {
           <span>Don’t have a account? </span>
           <Link
             href="/signup"
-            className="text-primary font-medium hover:underline"
+            className="text-foreground font-medium hover:underline"
           >
             Sign up
           </Link>
