@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -20,31 +21,61 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "@/components/ui/sonner";
+import { useLoginMutation } from "@/features/auth/api";
 import {
   type LoginFormData,
   loginSchema,
 } from "@/features/auth/schemas/login.schema";
+import { handleApiError } from "@/lib/utils";
 
 export function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const emailFromQuery = searchParams.get("email") || "";
+
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [login, { isLoading }] = useLoginMutation();
 
   const {
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      email: emailFromQuery,
       password: "",
       rememberMe: false,
     },
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    // Submit handler placeholder
-    console.log("Sign in form data:", data);
+  useEffect(() => {
+    if (emailFromQuery) {
+      setValue("email", emailFromQuery, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  }, [emailFromQuery, setValue]);
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      setErrorMessage(null);
+      const res = await login(data).unwrap();
+      toast.success(res.message || "Signed in successfully!");
+      router.push("/");
+      router.refresh();
+    } catch (err: unknown) {
+      const msg = handleApiError(
+        err,
+        "Failed to sign in. Please check your credentials.",
+      );
+      setErrorMessage(msg);
+    }
   };
 
   return (
@@ -145,13 +176,19 @@ export function LoginForm() {
             </Label>
           </div>
 
+          {errorMessage && (
+            <p className="text-destructive text-center text-xs font-medium">
+              {errorMessage}
+            </p>
+          )}
+
           {/* Submit Button - Black bg and white text */}
           <Button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoading}
             className="mt-2 h-10 w-full bg-black text-sm font-semibold text-white hover:bg-black/90 active:bg-black/80"
           >
-            {isSubmitting ? "Signing in..." : "Sign in"}
+            {isSubmitting || isLoading ? "Signing in..." : "Sign in"}
           </Button>
         </form>
 

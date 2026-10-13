@@ -2,6 +2,8 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, Plus_Jakarta_Sans } from "next/font/google";
 
+import { Providers } from "@/providers";
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -30,10 +32,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${plusJakartaSans.variable} ${playfairDisplay.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col font-sans antialiased">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

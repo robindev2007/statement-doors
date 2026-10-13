@@ -3,7 +3,7 @@
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -13,7 +13,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { toast } from "@/components/ui/sonner";
+import { useVerifyMagicLinkMutation } from "@/features/auth/api";
+import { cn, handleApiError } from "@/lib/utils";
 
 type VerificationStatus = "loading" | "success" | "error";
 
@@ -21,48 +23,53 @@ export function VerifyMagicLink() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const email = searchParams.get("email") || "";
 
-  const [status, setStatus] = useState<VerificationStatus>("loading");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const loginUrl = email
+    ? `/login?email=${encodeURIComponent(email)}`
+    : "/login";
+
+  const [status, setStatus] = useState<VerificationStatus>(() =>
+    token ? "loading" : "error",
+  );
+  const [errorMessage, setErrorMessage] = useState<string>(() =>
+    token ? "" : "Missing or invalid verification token.",
+  );
+  const hasRequestedRef = useRef(false);
+
+  const [verifyMagicLink] = useVerifyMagicLinkMutation();
 
   useEffect(() => {
-    let isMounted = true;
+    if (!token || hasRequestedRef.current) return;
+    const activeToken = token;
+    hasRequestedRef.current = true;
 
-    async function verify() {
-      // Simulate/trigger token verification
+    async function executeVerification() {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        if (!isMounted) return;
-
-        // In a live system, you'd send `token` to your verification API route or client
-        if (token === "invalid") {
-          setStatus("error");
-          setErrorMessage("This magic link is invalid or has expired.");
-          return;
-        }
-
+        const res = await verifyMagicLink({ token: activeToken }).unwrap();
         setStatus("success");
 
-        // Automatically redirect to homepage after success
-        const timer = setTimeout(() => {
-          router.push("/");
-        }, 1500);
+        const msg =
+          res.message ||
+          "Account successfully verified via Magic Link! You can now log in.";
+        toast.success(msg);
 
-        return () => clearTimeout(timer);
-      } catch {
-        if (!isMounted) return;
+        // Auto-redirect to login with email prefilled
+        setTimeout(() => {
+          router.push(loginUrl);
+        }, 1200);
+      } catch (err: unknown) {
         setStatus("error");
-        setErrorMessage("Verification failed. Please try signing in again.");
+        const msg = handleApiError(
+          err,
+          "Invalid or expired verification link. Please request a new one.",
+        );
+        setErrorMessage(msg);
       }
     }
 
-    verify();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [token, router]);
+    executeVerification();
+  }, [token, loginUrl, router, verifyMagicLink]);
 
   return (
     <Card className="flex min-h-[60vh] w-full max-w-115 flex-col justify-center border-0 bg-transparent shadow-none">
@@ -86,39 +93,39 @@ export function VerifyMagicLink() {
         )}
 
         <CardTitle className="text-2xl font-bold tracking-tight sm:text-3xl">
-          {status === "loading" && "Just a moment..."}
+          {status === "loading" && "Verifying your account..."}
           {status === "success" && "Account Verified!"}
           {status === "error" && "Verification Failed"}
         </CardTitle>
 
         <CardDescription className="text-muted-foreground mt-2 text-sm">
           {status === "loading" &&
-            "We’re verifying your magic link. Please wait while we prepare your session."}
+            "Please wait while we verify your verification link with the server."}
           {status === "success" &&
-            "Your email has been verified. Redirecting you to the home page..."}
+            "Your email has been verified. Redirecting you to sign in..."}
           {status === "error" &&
             (errorMessage ||
-              "This magic link is invalid or has already been used.")}
+              "This verification link is invalid or has already been used.")}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="flex flex-col items-center justify-center pt-2">
         {status === "success" && (
           <Link
-            href="/"
+            href={loginUrl}
             className={cn(
               buttonVariants({ variant: "default" }),
               "mt-2 h-10 w-full max-w-xs bg-black text-sm font-semibold text-white hover:bg-black/90",
             )}
           >
-            Continue to Home
+            Go to Sign In
           </Link>
         )}
 
         {status === "error" && (
           <div className="mt-2 flex w-full max-w-xs flex-col gap-2">
             <Link
-              href="/login"
+              href={loginUrl}
               className={cn(
                 buttonVariants({ variant: "default" }),
                 "h-10 w-full bg-black text-sm font-semibold text-white hover:bg-black/90",

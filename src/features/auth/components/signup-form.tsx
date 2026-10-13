@@ -1,12 +1,12 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, MailCheck } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -18,14 +18,22 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "@/components/ui/sonner";
+import { useSignupMutation } from "@/features/auth/api";
 import {
   type SignupFormData,
   signupSchema,
 } from "@/features/auth/schemas/signup.schema";
+import { cn, handleApiError } from "@/lib/utils";
 
 export function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
+
+  const [signup, { isLoading }] = useSignupMutation();
 
   const {
     register,
@@ -45,9 +53,62 @@ export function SignUpForm() {
     },
   });
 
-  const onSubmit = (data: SignupFormData) => {
-    console.log("Sign up form data:", data);
+  const onSubmit = async (data: SignupFormData) => {
+    try {
+      setErrorMessage(null);
+      const res = await signup(data).unwrap();
+      setRegisteredEmail(data.email);
+      setIsSuccess(true);
+      toast.success(
+        res.message || "Account created! Please check your email to verify.",
+      );
+    } catch (err: unknown) {
+      const msg = handleApiError(
+        err,
+        "Failed to create account. Please try again.",
+      );
+      setErrorMessage(msg);
+    }
   };
+
+  if (isSuccess) {
+    return (
+      <Card className="border-border/50 w-full max-w-135 border shadow-xs">
+        <CardHeader className="text-center">
+          <div className="bg-primary/10 text-primary mx-auto mb-4 flex size-14 items-center justify-center rounded-full">
+            <MailCheck className="size-7" />
+          </div>
+          <CardTitle className="text-2xl font-bold tracking-tight sm:text-3xl">
+            Check your email
+          </CardTitle>
+          <CardDescription className="text-muted-foreground mt-2 text-sm leading-relaxed">
+            We’ve sent a verification link to{" "}
+            <span className="text-foreground font-semibold">
+              {registeredEmail}
+            </span>
+            . Please check your inbox and click the link to activate your
+            account.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-4 pt-2">
+          <div className="bg-muted/40 text-muted-foreground rounded-lg p-4 text-center text-xs">
+            Didn’t receive the email? Check your spam or junk folder.
+          </div>
+
+          <Link
+            href="/login"
+            className={cn(
+              buttonVariants({ variant: "default" }),
+              "flex h-10 w-full items-center justify-center bg-black text-sm font-semibold text-white hover:bg-black/90 active:bg-black/80",
+            )}
+          >
+            Go to Sign In
+          </Link>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="border-border/50 w-full max-w-135 border shadow-xs">
@@ -62,6 +123,12 @@ export function SignUpForm() {
       </CardHeader>
 
       <CardContent>
+        {errorMessage && (
+          <div className="bg-destructive/10 text-destructive border-destructive/20 mb-4 rounded-md p-3 text-xs font-medium">
+            {errorMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* First Name & Last Name Row */}
           <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
@@ -260,10 +327,12 @@ export function SignUpForm() {
           {/* Submit Button - Black bg and white text */}
           <Button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isLoading || isSubmitting}
             className="mt-3 h-10 w-full bg-black text-sm font-semibold text-white hover:bg-black/90 active:bg-black/80"
           >
-            {isSubmitting ? "Creating Account..." : "Create Account"}
+            {isLoading || isSubmitting
+              ? "Creating Account..."
+              : "Create Account"}
           </Button>
         </form>
       </CardContent>
