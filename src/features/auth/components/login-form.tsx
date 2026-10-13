@@ -67,7 +67,10 @@ export function LoginForm() {
       setErrorMessage(null);
       const res = await login(data).unwrap();
       toast.success(res.message || "Signed in successfully!");
-      router.push("/");
+      const redirectUrl = searchParams.get("redirect");
+      const targetPath =
+        redirectUrl || (res?.data?.role === "admin" ? "/admin" : "/");
+      router.push(targetPath);
       router.refresh();
     } catch (err: unknown) {
       const msg = handleApiError(
